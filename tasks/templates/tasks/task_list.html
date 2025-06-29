@@ -28,20 +28,30 @@
         </div>
 
         <!-- Filter Buttons -->
-        <div class="btn-group mb-4" role="group">
-            <a href="{% url 'tasks:task_list' %}?filter=all" 
+        <div class="btn-group mb-3" role="group">
+            <a href="{% url 'tasks:task_list' %}?filter=all&order_by={{ order_by }}" 
                class="btn btn-outline-primary {% if filter_type == 'all' %}active{% endif %}">
                 <i class="bi bi-list me-1"></i>All
             </a>
-            <a href="{% url 'tasks:task_list' %}?filter=pending" 
+            <a href="{% url 'tasks:task_list' %}?filter=pending&order_by={{ order_by }}" 
                class="btn btn-outline-warning {% if filter_type == 'pending' %}active{% endif %}">
                 <i class="bi bi-clock me-1"></i>Pending
             </a>
-            <a href="{% url 'tasks:task_list' %}?filter=completed" 
+            <a href="{% url 'tasks:task_list' %}?filter=completed&order_by={{ order_by }}" 
                class="btn btn-outline-success {% if filter_type == 'completed' %}active{% endif %}">
                 <i class="bi bi-check-circle me-1"></i>Completed
             </a>
         </div>
+
+        <!-- Order Dropdown -->
+        <form method="get" class="mb-4" style="max-width: 300px;">
+            <input type="hidden" name="filter" value="{{ filter_type }}">
+            <label for="order_by" class="form-label me-2">Order by:</label>
+            <select name="order_by" id="order_by" class="form-select d-inline-block w-auto" onchange="this.form.submit()">
+                <option value="priority" {% if order_by == 'priority' %}selected{% endif %}>Priority</option>
+                <option value="due_date" {% if order_by == 'due_date' %}selected{% endif %}>Due Date</option>
+            </select>
+        </form>
 
         <!-- Tasks Grid -->
         {% if tasks %}
