@@ -12,7 +12,7 @@ def task_list(request):
     tasks = Task.objects.filter(user=request.user)
     
     # Filter by status
-    filter_type = request.GET.get('filter', 'all')
+    filter_type = request.GET.get('filter', 'pending')
     if filter_type == 'completed':
         tasks = tasks.filter(completed=True)
     elif filter_type == 'pending':
