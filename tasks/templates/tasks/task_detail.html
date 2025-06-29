@@ -3,6 +3,7 @@
 {% block title %}{{ task.title }} - TickIt{% endblock %}
 
 {% block content %}
+<form style="display:none;">{% csrf_token %}</form>
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card shadow">

@@ -3,6 +3,7 @@
 {% block title %}My Tasks - TickIt{% endblock %}
 
 {% block content %}
+<form style="display:none;">{% csrf_token %}</form>
 <div class="row">
     <div class="col-12">
         <!-- Header -->
@@ -142,10 +143,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Handle task completion toggle
     document.querySelectorAll('.task-toggle').forEach(function(checkbox) {
+        console.log('Checkbox found:', checkbox);
         checkbox.addEventListener('change', function() {
             const taskId = this.dataset.taskId;
             const label = this.nextElementSibling;
-            
+
             fetch(`/task/${taskId}/toggle/`, {
                 method: 'POST',
                 headers: {
