@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
@@ -79,6 +80,7 @@ def task_delete(request, pk):
     return render(request, 'tasks/task_confirm_delete.html', {'task': task})
 
 @login_required
+@require_POST
 def task_toggle(request, pk):
     """Toggle task completion status"""
     task = get_object_or_404(Task, pk=pk, user=request.user)
