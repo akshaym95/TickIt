@@ -13,6 +13,8 @@
     <style>
         .task-card {
             transition: transform 0.2s ease-in-out;
+            position: static !important;
+            overflow: visible !important;
         }
         .task-card:hover {
             transform: translateY(-2px);
@@ -26,6 +28,10 @@
         .priority-medium { border-left: 4px solid #ffc107; }
         .priority-low { border-left: 4px solid #28a745; }
         .overdue { border-left: 4px solid #dc3545; background-color: #f8d7da; }
+        /* Ensure dropdowns in task cards appear above other cards */
+        .task-card .dropdown-menu.show {
+            z-index: 2000 !important;
+        }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -96,7 +102,7 @@
     <!-- Footer -->
     <footer class="bg-dark text-light py-4 mt-5">
         <div class="container text-center">
-            <p class="mb-0">&copy; 2024 TickIt. Stay focused, stay productive! ✅</p>
+            <p class="mb-0">&copy; 2025 TickIt. Stay focused, stay productive! ✅</p>
         </div>
     </footer>
 
