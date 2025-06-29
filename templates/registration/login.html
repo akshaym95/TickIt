@@ -16,7 +16,16 @@
                 <form method="post">
                     {% csrf_token %}
                     
-                    {% if form.errors %}
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            {% for error in form.non_field_errors %}
+                                {{ error }}<br>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    {% if form.errors and not form.non_field_errors %}
                         <div class="alert alert-danger">
                             <i class="bi bi-exclamation-triangle me-2"></i>
                             Please correct the errors below.
@@ -41,7 +50,7 @@
                 <div class="text-center">
                     <small class="text-muted">
                         Don't have an account? 
-                        <a href="{% url 'admin:index' %}" class="text-decoration-none">Contact admin</a>
+                        <a href="{% url 'tasks:register' %}" class="text-decoration-none">Create one here</a>
                     </small>
                 </div>
             </div>

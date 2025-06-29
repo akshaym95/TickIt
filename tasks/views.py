@@ -4,12 +4,38 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
+from django.contrib.auth import login
+from django.db.models import Case, When, Value, IntegerField
 from .models import Task
-from .forms import TaskForm
+from .forms import TaskForm, UserRegistrationForm
+
+def register(request):
+    """User registration view"""
+    if request.user.is_authenticated:
+        return redirect('tasks:task_list')
+    
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, f'Welcome to TickIt, {user.username}! Your account has been created successfully.')
+            return redirect('tasks:task_list')
+    else:
+        form = UserRegistrationForm()
+    
+    return render(request, 'registration/register.html', {'form': form})
 
 @login_required
 def task_list(request):
-    """Display all tasks for the logged-in user"""
+    """Display all tasks for the logged-in user, with filter and ordering options"""
+    order_by = request.GET.get('order_by', 'priority')
+    priority_order = Case(
+        When(priority='high', then=Value(1)),
+        When(priority='medium', then=Value(2)),
+        When(priority='low', then=Value(3)),
+        output_field=IntegerField(),
+    )
     tasks = Task.objects.filter(user=request.user)
     
     # Filter by status
@@ -19,9 +45,16 @@ def task_list(request):
     elif filter_type == 'pending':
         tasks = tasks.filter(completed=False)
     
+    # Order by selected field
+    if order_by == 'due_date':
+        tasks = tasks.order_by('due_date', '-created_at')
+    else:  # Default to priority
+        tasks = tasks.annotate(priority_order=priority_order).order_by('priority_order', '-created_at')
+    
     context = {
         'tasks': tasks,
         'filter_type': filter_type,
+        'order_by': order_by,
     }
     return render(request, 'tasks/task_list.html', context)
 
